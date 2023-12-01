@@ -29,9 +29,9 @@ public class Pixel extends JPanel {
     private double xyR = 0, xzR = 0, yzR = 0;
 
     // view attributes
-    private int posicion = 0;
-    private  double scala = 0.10;
-    private int viewX = 5, viewY = 20, viewZ = -20, tX = 0, tY = 0;
+    private int posicion = 300,px = 0, py = 0;
+    private  double scala = 0.09;
+
     private double t = 0;
     private double x, y, z, xf, yf, zf, sideCube = 0;
     private double[][] matrix = new double[4][241];
@@ -54,45 +54,40 @@ public class Pixel extends JPanel {
             public void keyPressed(KeyEvent e) {
                 int key = e.getKeyCode();
                 if (key == KeyEvent.VK_LEFT) {
-                    viewX -= 5;
-                    t -= 0.005;
                     // Ajustar rotación izquierda
-                    if (xyR > 0) xyR -= 0.001;
-                    System.out.println("xyR = " + xyR);
+                    if (xyR > 0) xyR -= 0.005;
+
                 }
                 if (key == KeyEvent.VK_RIGHT) {
-                    viewX += 5;
-                    t += 0.005;
                     // Ajustar rotación derecha
-                    if (xyR < 0.005) xyR += 0.001;
+                    if (xyR < 0.015) xyR += 0.005;
                 }
                 if (key == KeyEvent.VK_UP) {
-                    viewY -= 5;
+
                     if (xzR < 0.05) xzR += 0.01;
                     tethax += 1;
                     sideCube += 5;
-                    posicion += 5;
+
                 }
                 if (key == KeyEvent.VK_DOWN) {
-                    viewY += 5;
+
                     if (xzR > 0) xzR -= 0.01;
                     tethax -= 1;
                     sideCube -= 5;
-                    posicion -= 5;
+
                 }
                 if (key == KeyEvent.VK_Z) {
-                    viewZ += 5;
+                    if(px < 15) px += 5;
                 }
                 if (key == KeyEvent.VK_X) {
-                    viewZ -= 10;
                     estado1 = !estado1;
+                    if(px > -5) px -=5;
                 }
                 if (key == KeyEvent.VK_W) {
-                    tX += 10;
+                    if(py < 15)py += 5;
                 }
                 if (key == KeyEvent.VK_S) {
-                    tX -= 10;
-
+                  if(py > -5)  py -= 5;
                 }
                 if (key == KeyEvent.VK_D) {
                   if(scala < 0.20)  scala += 0.05;
@@ -108,7 +103,6 @@ public class Pixel extends JPanel {
     public void cordenadasObj (){
         String filePath = "D:\\M6\\Gráficas_por_computadora_2D_y_3D\\p3\\Figuras\\Airplane_v1_L1.123c4a6fedec-1680-4a36-a228-b0d440a4f280\\11803_Airplane_v1_l1.obj";
          vertices = extractVerticesFromOBJ(filePath);
-        // Imprime las coordenadas de los vértices
         for (double[] vertex : vertices) {
             System.out.println("Vertex: " + vertex[0] + ", " + vertex[1] + ", " + vertex[2]);
         }
@@ -144,29 +138,20 @@ public class Pixel extends JPanel {
         update(g);
         clear();
         try {
-            // practica
-         // tiposDeProyeccion(500, 400, 200, 50, 600, 0, Color.white);
-         /*   tiposDeProyeccion(200, 100, 5, 500, 400, 0, Color.blue);*/
-            // tiposDeProyeccion(600, 600, 5, 400, 800, 8, Color.RED);
 
            //drawCuboR1(201,50,Color.green);
 
             // drawCurve(100);
             //   if(estado1) drawPyramidR(350,  Color.blue);
+            drawFigura(Color.red);
 
-           /*for (int i = 0; i < vertices.size() - 1; i++) {
-                double[] puntoActual = vertices.get(i);
-                double[] puntoSiguiente = vertices.get(i + 1);
 
-                drawDDL(puntoActual[0] * 0.09, puntoActual[1] * 0.09 , puntoActual[2] * 0.09 , puntoSiguiente[0] * 0.09 , puntoSiguiente[1]*  0.09, puntoSiguiente[2]*  0.09, Color.RED);
-            }*/
-            if(estado1)   drawFigura(300,Color.red);
         } catch (Exception e) {
         }
     }
 
     public void clear() {
-        fondoG.setColor(Color.black);
+        fondoG.setColor(Color.white);
         fondoG.fillRect(0, 0, getWidth(), getHeight());
         repaint();
     }
@@ -235,9 +220,8 @@ public class Pixel extends JPanel {
 
     }
 
-
     public void drawCuboR1(int posicionCubo, Color c) {
-        posicion = posicionCubo;
+
         // rotate cube
         for (int x = 0; x < 2; x++) {
             for (int y = 0; y < 2; y++) {
@@ -257,32 +241,6 @@ public class Pixel extends JPanel {
             }
         }
     }
-
-    final void drawEdge1(double x1, double y1, double x2, double y2, Color c) {
-        algoritmoDDALine((int) (x1 * scala) + posicion, (int) (-y1 * scala) + posicion, (int) (x2 * scala) + posicion, (int) (-y2 * scala) + posicion, c);
-    }
-
-    final void xyRotate1(double p[], double sin, double cos) {
-        double temp;
-        temp = cos * p[0] + sin * p[1];
-        p[1] = -sin * p[0] + cos * p[1];
-        p[0] = temp;
-    }
-
-    final void xzRotate1(double p[], double sin, double cos) {
-        double temp;
-        temp = cos * p[0] + sin * p[2];
-        p[2] = -sin * p[0] + cos * p[2];
-        p[0] = temp;
-    }
-
-    final void yzRotate1(double p[], double sin, double cos) {
-        double temp;
-        temp = cos * p[1] + sin * p[2];
-        p[2] = -sin * p[1] + cos * p[2];
-        p[1] = temp;
-    }
-
 
     public double[][] curve(double x, double y, double z, int sideCube) {
         double[][] escala = {{sideCube, 0, 0, 0}, {0, sideCube, 0, 0}, {0, 0, sideCube, 0}, {0, 0, 0, 1}};
@@ -370,23 +328,6 @@ public class Pixel extends JPanel {
         return m;
     }
 
-    public void animacion() {
-        while (true) {
-
-            matrix1 = translateOrigin(matrix1);
-            matrix1 = Rotarx(matrix1, tethax);
-            matrix1 = Rotarx(matrix1, tethay);
-            matrix1 = Rotarx(matrix1, tethaz);
-            matrix1 = change(matrix1);
-
-            repaint();
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
-    }
 
     private static List<double[]> extractVerticesFromOBJ(String filePath) {
         List<double[]> vertices = new ArrayList<>();
@@ -415,26 +356,55 @@ public class Pixel extends JPanel {
         return vertices;
     }
 
-    public void drawFigura(int posicionCubo, Color c) {
-        posicion = posicionCubo;
-        // rotate cube
+    public void drawFigura( Color c) {
+        // rotate
         for (int i = 0; i < vertices.size(); i++) {
             xyRotate1(vertices.get(i), Math.sin(xyR), Math.cos(xyR));
             xzRotate1(vertices.get(i), Math.sin(xzR), Math.cos(xzR));
             yzRotate1(vertices.get(i), Math.sin(yzR), Math.cos(yzR));
-        }
 
+            // translate
+            vertices.get(i)[0] += px;
+            vertices.get(i)[1] += py;
+
+        }
         // bordes
         for (int i = 0; i < vertices.size(); i++) {
             int j = (i + 1) % vertices.size();
             drawEdge(vertices.get(i), vertices.get(j), c);
         }
+
     }
 
-    final void drawEdge(double[] p1, double[] p2, Color c) {
-        algoritmoDDALine((int) (p1[0] * scala) + posicion, (int) (-p1[1] * scala) + posicion,
-                (int) (p2[0] * scala) + posicion, (int) (-p2[1] * scala) + posicion, c);
+    private void drawEdge(double[] p1, double[] p2, Color c) {
+        algoritmoDDALine((int) (p1[0] * scala) + posicion , (int) (-p1[1] * scala) + posicion ,
+                (int) (p2[0] * scala) + posicion , (int) (-p2[1] * scala) + posicion , c);
     }
 
+
+    final void drawEdge1(double x1, double y1, double x2, double y2, Color c) {
+        algoritmoDDALine((int) (x1 * scala) + posicion, (int) (-y1 * scala) + posicion, (int) (x2 * scala) + posicion, (int) (-y2 * scala) + posicion, c);
+    }
+
+    final void xyRotate1(double p[], double sin, double cos) {
+        double temp;
+        temp = cos * p[0] + sin * p[1]  ;
+        p[1] = -sin * p[0] + cos * p[1] ;
+        p[0] = temp;
+    }
+
+    final void xzRotate1(double p[], double sin, double cos) {
+        double temp;
+        temp = cos * p[0] + sin * p[2];
+        p[2] = -sin * p[0] + cos * p[2];
+        p[0] = temp;
+    }
+
+    final void yzRotate1(double p[], double sin, double cos) {
+        double temp;
+        temp = cos * p[1] + sin * p[2];
+        p[2] = -sin * p[1] + cos * p[2];
+        p[1] = temp;
+    }
 
 }
